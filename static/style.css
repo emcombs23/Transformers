@@ -1,0 +1,143 @@
+:root {
+  --bg: #0f172a;
+  --surface: #111827;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --card: #1e293b;
+  --shadow: rgba(15, 23, 42, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: radial-gradient(circle at top, #0f172a 0%, #020617 60%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+main {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+header p {
+  margin: 0.75rem auto 0;
+  color: var(--muted);
+  max-width: 38rem;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--card);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  min-height: 120px;
+  box-shadow: 0 24px 80px var(--shadow);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 1.35rem;
+  right: 1.35rem;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.55), transparent);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.card::after {
+  content: "→";
+  position: absolute;
+  top: 50%;
+  right: 1.25rem;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: var(--accent);
+  z-index: 1;
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-key,
+.card-value {
+  padding: 1rem;
+  border-radius: 0.85rem;
+}
+
+.card-key {
+  background: rgba(56, 189, 248, 0.12);
+  color: #c7f3ff;
+  font-weight: 700;
+  text-align: center;
+}
+
+.card-value {
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--text);
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.loading,
+.error-message {
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: rgba(148, 163, 184, 0.08);
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+@media (max-width: 520px) {
+  .card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card::before,
+  .card::after {
+    display: none;
+  }
+
+  .card-content {
+    grid-template-columns: 1fr;
+  }
+}
