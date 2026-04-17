@@ -14,8 +14,19 @@ for char in vocab:
     count +=1
 print(vocabDict)
 
-@app.get("/dict")
+@app.get("/vocab")
 def get_chars():
     return vocabDict
+
+@app.get("/encode")
+def encode_string(string: str):
+    string = string.lower()
+    encodeList = []
+    for char in string:
+        if char in vocabDict:
+            encodeList.append(vocabDict[char])
+        else:
+            encodeList.append(vocabDict[" "])
+    return encodeList
 
 app.mount("/", StaticFiles(directory="static", html=True), name="static")

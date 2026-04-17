@@ -1,52 +1,65 @@
-const cardsContainer = document.getElementById('cards-container');
+async function loadVocab() {
+    const res = await fetch('/vocab');
+    const vocab = await res.json();
+    const container = document.getElementById('vocab-container');
 
-function createCard(key, value) {
-  const card = document.createElement('article');
-  card.className = 'card';
+    for (const [word, index] of Object.entries(vocab)) {
+        const card = document.createElement('div');
+        card.className = 'vocab-card';
 
-  const content = document.createElement('div');
-  content.className = 'card-content';
+        const wordEl = document.createElement('div');
+        wordEl.className = 'vocab-word';
+        wordEl.textContent = word === ' ' ? '␣' : word;
 
-  const keyEl = document.createElement('div');
-  keyEl.className = 'card-key';
-  keyEl.textContent = key;
+        const arrow = document.createElement('div');
+        arrow.className = 'vocab-arrow';
+        arrow.textContent = '↓';
 
-  const valueEl = document.createElement('div');
-  valueEl.className = 'card-value';
-  valueEl.textContent = value;
+        const indexEl = document.createElement('div');
+        indexEl.className = 'vocab-index';
+        indexEl.textContent = index;
 
-  content.appendChild(keyEl);
-  content.appendChild(valueEl);
-  card.appendChild(content);
-  return card;
-}
-
-function renderDictionary(dict) {
-  cardsContainer.innerHTML = '';
-  const entries = Object.entries(dict);
-
-  if (!entries.length) {
-    cardsContainer.innerHTML = '<div class="loading">No dictionary items found.</div>';
-    return;
-  }
-
-  entries.forEach(([key, value]) => {
-    cardsContainer.appendChild(createCard(key, value));
-  });
-}
-
-async function fetchDictionary() {
-  try {
-    const response = await fetch('/dict');
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+        card.append(wordEl, arrow, indexEl);
+        container.appendChild(card);
     }
-    const dict = await response.json();
-    renderDictionary(dict);
-  } catch (error) {
-    cardsContainer.innerHTML = `<div class="error-message">Unable to load dictionary: ${error.message}</div>`;
-    console.error('Fetch /dict failed', error);
-  }
 }
 
-fetchDictionary();
+loadVocab();
+
+async function encodeWord() {
+    const input = document.getElementById('encode-input');
+    const resultContainer = document.getElementById('encode-result');
+    const word = input.value || '';
+    resultContainer.textContent = '';
+
+    if (word.trim() === '') {
+        resultContainer.textContent = 'Please enter a word.';
+        return;
+    }
+
+    try {
+        const res = await fetch(`/encode?string=${encodeURIComponent(word)}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const list = await res.json();
+
+        // display items horizontally (not bulleted)
+        for (const item of list) {
+            const span = document.createElement('span');
+            span.className = 'encode-item';
+            span.textContent = item;
+            resultContainer.appendChild(span);
+        }
+    } catch (err) {
+        resultContainer.textContent = 'Error encoding word.';
+        console.error(err);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('encode-button');
+    const input = document.getElementById('encode-input');
+    btn.addEventListener('click', encodeWord);
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') encodeWord();
+    });
+});
