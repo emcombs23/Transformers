@@ -30,6 +30,24 @@ print(clean_string("Hello, World!x"))
 embedding = nn.Embedding(27,2)
 
 
+vocab_lookup = {}
+
+for i in range(len(vocab)):
+	vocab_lookup[vocab[i]] = {"char":vocab[i], "id":i, "embedding":embedding(torch.tensor(i)).tolist()}
+print(vocab_lookup)
+
+
+
+
+
+@app.get("/vocabLookup")
+def get_embedding():
+	return vocab_lookup
+
+
+
+
+
 
 @app.get("/vocab")
 def get_chars():
