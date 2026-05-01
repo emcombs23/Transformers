@@ -9,11 +9,21 @@
 <body>
     <h1>Vocabulary</h1>
     <div id="encode-panel">
-        <input id="encode-input" type="text" placeholder="Type a word to encode" />
-        <button id="encode-button">Encode</button>
+        <input id="encode-input" type="text" placeholder="Type a string to embed" />
+        <button id="encode-button">Embed</button>
     </div>
     <div id="encode-result"></div>
     <div id="vocab-container"></div>
+    <div id="plot-container">
+        <div class="plot-box">
+            <h2>Vocab Embeddings (2D)</h2>
+            <canvas id="embedding-plot"></canvas>
+        </div>
+        <div class="plot-box">
+            <h2>Position Embeddings (2D)</h2>
+            <canvas id="position-plot"></canvas>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

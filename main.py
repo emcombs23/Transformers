@@ -47,6 +47,31 @@ def get_embedding():
 
 
 
+positions_embedding = nn.Embedding(21,2)
+position_lookup = {}
+
+for i in range(21):
+	position_lookup[i] = {"id":i, "embedding":positions_embedding(torch.tensor(i)).tolist()}
+
+@app.get("/positionLookup")
+def get_position_embedding():
+	return position_lookup
+
+
+@app.get("/sentenceEmbedding")
+def encode_string(string: str):
+    clean = clean_string(string)
+    embeddingList = []
+    for i in range(len(clean)):
+        char = clean[i]
+        embeddingList.append([vocab_lookup[char]["embedding"][0]+position_lookup[i]["embedding"][0],vocab_lookup[char]["embedding"][1]+position_lookup[i]["embedding"][1]])
+    return embeddingList
+
+
+
+
+
+
 
 
 @app.get("/vocab")
